@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "client_id": "{{env `client_id`}}",
+    "client_secret": "{{env `client_Secret`}}",
+    "tenant_id": "{{env `tenant_id`}}",
+    "subscription_id": "{{env `subscription_id`}}"
+  },
+
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+
+    "managed_image_resource_group_name": "packer1",
+    "managed_image_name": "packer-{{timestamp}}",
+    "build_resource_group_name": "packer1",
+
+    "os_type": "Windows",
+    "image_publisher": "MicrosoftWindowsServer",
+    "image_offer": "WindowsServer",
+    "image_sku": "2016-Datacenter",
+
+    "communicator": "winrm",
+    "winrm_use_ssl": "true",
+    "winrm_insecure": "true",
+    "winrm_timeout": "5m",
+    "winrm_password": "Welcome@123456",
+    "winrm_username": "packer",
+
+    "azure_tags": {
+        "Name": "packer-VM",
+        "CostCode": "1234XYZ"
+    },
+
+    "virtual_network_name": "pakcer",
+    "virtual_network_subnet_name" : "packer-pri",
+    "private_virtual_network_with_public_ip": true
+    "virtual_network_resource_group_name" : "packer1",
+
+    "vm_size": "Standard_B1s"
+  }],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./ansible.yml"
+    }
+  ]
+}
